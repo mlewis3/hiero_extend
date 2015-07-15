@@ -54,10 +54,6 @@ arraylist.append(fixedplanearray)
 arraylist.append(smallestplanearray)
 outputlist = []
 ts = time.time()
-#for file in filenamelist:
-#  outputstream = open(file,'w')
-#  outputstream.write(headerbanner + '\n')
-#  outputlist.append(file)
 
 linecount = 0
 for nodeIndex,node in enumerate(nodes):
@@ -146,6 +142,3 @@ for nodeIndex,node in enumerate(nodes):
               for arrayindex in range(0,17):
                 outputstream.write(str(arraylist[index][index1][arrayindex]) + '\t')
               outputstream.write('\n')
-                #for lineoutput in arraylist[exec_count]:
-                #  for linecount in range(0,17):
-                #    outputstream.write(str(lineoutput[linecount]) + '\t')
