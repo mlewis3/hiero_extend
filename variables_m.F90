@@ -55,7 +55,7 @@
          yplane = .false.
          zplane = .false.
     
-!          if (mypz .eq. 0) print *, ' Variable_m xplane ', leader_xplane, ' yplane ', leader_yplane, ' z plane: ' , leader_zplane 
+          if (mypz .eq. 0) print *, ' Variable_m xplane ', leader_xplane, ' yplane ', leader_yplane, ' z plane: ' , leader_zplane 
          
          if ((leader_xplane .LE. leader_yplane) .AND. (leader_xplane .LE. leader_zplane)) then
              if (mypx .eq. 0 ) then
