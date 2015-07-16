@@ -17,10 +17,10 @@ searchstring = 'Time for read'
 executables = ['No Leader', 'Fixed Plane', 'Smallest Plane']
 
 
-def runcmd (pgm, node):
+def runcmd (pgm, node, dir):
 
-	script = './' + pgm + '.sh ' + str(node) 
-        cmd = 'qsub -A ExaHDF5 -t 01:00:00 -n '+str(node)+' --mode script '+script
+	script = './' + pgm + '.sh ' + str(node)  + ' ' + str(dir)
+        cmd = 'qsub -A ' + project + ' -t 01:00:00 -n '+str(node)+' --mode script '+script
         print 'Executing ' + cmd
 	jobid = Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
 	print 'Jobid : ' + jobid
@@ -55,15 +55,24 @@ arraylist.append(fixedplanearray)
 arraylist.append(smallestplanearray)
 outputlist = []
 ts = time.time()
+project = ' '
+basedir = ' '
 
-machine_name = print(socket.gethostname())
+machine_name = socket.gethostname()
+print machine_name
 if machine_name == 'cetuslac1':
  basedir = '/projects/ExaHDF5/mlewis/hiero'
-else if machine_name == 'miralac1' :
+ project = 'ExaHDF5'
+elif machine_name == 'miralac1' :
  basedir = '/projects/ExaHDF5/mlewis/hiero'
-else if machine_name == 'vestalac1':
+ project = 'ExaHDF5'
+elif machine_name == 'vestalac1':
+ project = 'visualization'
  basedir = '/projects/visualization/mlewis/hiero'
 
+
+project = 'visualization'
+basedir = '/projects/visualization/mlewis/hiero'
 
 linecount = 0
 for nodeIndex,node in enumerate(nodes):
@@ -71,7 +80,7 @@ for nodeIndex,node in enumerate(nodes):
     for pgm in modes:
       print '\nStarting ' + pgm + ' on ' + str(node) + ' nodes '
       jobid = runcmd(pgm, node, basedir)
-      filename = 'op' + pgm + '_' +str(node)+'_'+str(iter) + '_' + print(socket.gethostname())+ '_' + timestamp
+      filename = 'op' + pgm + '_' +str(node)+'_'+str(iter) + '_' + socket.gethostname()+ '_' + timestamp
       print filename + ' ' + jobid
       cmd = 'mv ' + jobid.strip() + '.output ' + filename + '.output'
       print cmd
