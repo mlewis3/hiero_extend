@@ -5,11 +5,12 @@ import time
 from subprocess import *
 import sys
 import datetime
+import socket
 #import numpy as np
 #import pylab as plt
 
-nodes = [32,64,128,256,512]
-modes = ['leadertest']
+nodes = [128]
+modes = ['topologies']
 baseDir = '/projects/ExaHDF5/mlewis/hiero'
 plotfile = 'plotit'
 searchstring = 'Time for read'
@@ -35,7 +36,7 @@ def runcmd (pgm, node):
 
 
 ts = time.time()
-timestamp = datetime.datetime.fromtimestamp(ts).strftime('-%Y-%m-%d-%H-%M')
+timestamp = datetime.datetime.fromtimestamp(ts).strftime('%m-%d-%H-%M')
 #timestamp = datetime.datetime.fromtimestamp(ts).strftime('-%Y-%m-%d')
 configuration = [ 'No Leader' , 'Fixed Plane' , 'Smallest Plane' ]
 searchstringlist = [ 'grep_no_leader' , 'grep_fixed_plane' , 'grep_smallest_plane ' ]
@@ -55,13 +56,22 @@ arraylist.append(smallestplanearray)
 outputlist = []
 ts = time.time()
 
+machine_name = print(socket.gethostname())
+if machine_name == 'cetuslac1':
+ basedir = '/projects/ExaHDF5/mlewis/hiero'
+else if machine_name == 'miralac1' :
+ basedir = '/projects/ExaHDF5/mlewis/hiero'
+else if machine_name == 'vestalac1':
+ basedir = '/projects/visualization/mlewis/hiero'
+
+
 linecount = 0
 for nodeIndex,node in enumerate(nodes):
   for iter in range (0, numIter):
     for pgm in modes:
       print '\nStarting ' + pgm + ' on ' + str(node) + ' nodes '
-      jobid = runcmd(pgm, node)
-      filename = 'op' + pgm + '_' +str(node)+'_'+str(iter) + '_' + timestamp
+      jobid = runcmd(pgm, node, basedir)
+      filename = 'op' + pgm + '_' +str(node)+'_'+str(iter) + '_' + print(socket.gethostname())+ '_' + timestamp
       print filename + ' ' + jobid
       cmd = 'mv ' + jobid.strip() + '.output ' + filename + '.output'
       print cmd
@@ -105,7 +115,7 @@ for nodeIndex,node in enumerate(nodes):
             arraylist[index][index1][13] = float(arraylist[index][index1][13]) + float(words[17])
 
             if iter == numIter -1: 
-              arraylist[index][index1][0] = (float(words[2]) * float(words[3]) * float(words[4])) / 1048576
+              arraylist[index][index1][0] = (float(words[2]) * float(words[3]) * float(words[4]) * 14 * 8) / 1048576
               #nx_g ny_g nz_g
               arraylist[index][index1][1] = int(words[2])
               arraylist[index][index1][2] = int(words[3])
