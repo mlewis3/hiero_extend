@@ -9,7 +9,7 @@ import socket
 #import numpy as np
 #import pylab as plt
 
-nodes = [128]
+nodes = [1024]
 modes = ['topologies']
 baseDir = '/projects/ExaHDF5/mlewis/hiero'
 plotfile = 'plotit'
@@ -139,7 +139,7 @@ for nodeIndex,node in enumerate(nodes):
               # time stamp
               arraylist[index][index1][16] = timestamp
               
-              if nodeIndex == 0:
+              if nodeIndex == 0 and index1 == 0:
                 print 'Opening : ' + filenamelist[index] + ' node ' + str(node) + '\n'
                 outputstream = open(filenamelist[index],'w')
                 outputstream.write(headerbanner + '\n')
