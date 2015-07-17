@@ -61,6 +61,9 @@ ts = time.time()
 project = 'visualization'
 basedir = '/projects/visualization/mlewis/hiero'
 
+#project = 'ExaHDF5'
+#basedir = '/projects/ExaHDF5/mlewis/hiero'
+
 linecount = 0
 for nodeIndex,node in enumerate(nodes):
   for iter in range (0, numIter):
