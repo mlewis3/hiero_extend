@@ -24,7 +24,7 @@
           filename = trim(dir_path)//'/'//trim(run_title)//'.'// &
                      trim(adjustl(time_ext))//'.field.nc'
 
-          print *, 'writing to: ', filename
+          ! print *, 'writing to: ', filename
           ! call PnetCDF APIs to write data to file
           call pnetcdf_write(filename)
 

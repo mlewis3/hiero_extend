@@ -91,7 +91,7 @@
              endif
              zplane = .true.
          endif
-         print *, ' Variable planes ', xplane, yplane , zplane
+         ! print *, ' Variable planes ', xplane, yplane , zplane
 #endif
 
 #ifdef OPT

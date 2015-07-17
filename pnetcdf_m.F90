@@ -80,7 +80,7 @@
                 err = nfmpi_get_file_info(ncid, info_used)
                 if (err .ne. NF_NOERR) call handle_err('nfmpi_get_file_info', err)
             endif
-           print *, 'Opening from the x plane '
+            ! print *, 'Opening from the x plane '
           elseif ( (yplane .eqv. .true.) .and. (mypy .eq. 0)) then 
             err = nfmpi_create(gcomm_y, trim(filename), cmode, file_info,ncid) 
             if (err .ne. NF_NOERR) call handle_err('nfmpi_create', err)
@@ -88,7 +88,7 @@
                 err = nfmpi_get_file_info(ncid, info_used)
                 if (err .ne. NF_NOERR) call handle_err('nfmpi_get_file_info', err)
             endif
-            print *, 'Opening from the y plane ' 
+            ! print *, 'Opening from the y plane ' 
           elseif ( (zplane .eqv. .true.)  .and. (mypz .eq. 0)) then 
             err = nfmpi_create(gcomm_z, trim(filename), cmode, file_info,ncid)
             if (err .ne. NF_NOERR) call handle_err('nfmpi_create', err)
@@ -96,7 +96,7 @@
                 err = nfmpi_get_file_info(ncid, info_used)
                 if (err .ne. NF_NOERR) call handle_err('nfmpi_get_file_info', err)
             endif
-             print *, 'Opening from the z plane ' 
+             ! print *, 'Opening from the z plane ' 
           endif
 #else          
           err = nfmpi_create(gcomm, trim(filename), cmode, file_info,ncid)
@@ -138,8 +138,8 @@
 #if defined(OPT_2) || defined(OPT)
          ! if (mypz .eq. 0) print *, 'In plane: ', zplane
           if ( IN_PLANE(xplane,mypx,yplane,mypy,zplane,mypz)) then
-            print*, 'rank in plane ', xplane, ' : ', mypx, ' : ', yplane, ' : ', mypy, ' : ', zplane, ' : ', mypz
-            print*, 'Leaders: ', myid
+            !print*, 'rank in plane ', xplane, ' : ', mypx, ' : ', yplane, ' : ', mypy, ' : ', zplane, ' : ', mypz
+            !print*, 'Leaders: ', myid
 #endif
           ! Save timing metadata global attributes
           ! ---------------------------------
@@ -355,7 +355,7 @@
           cmode = NF_NOWRITE
 					get_size = 0
 
-          print*, 'in read ' , myid  
+          ! print*, 'in read ' , myid  
 
 #ifdef OPT
 		  if (mypx .eq. 0) then !pm: added
@@ -366,15 +366,15 @@
        if (xplane .and. (mypx .eq. 0) ) then
           err = nfmpi_open(gcomm_x, trim(filename), cmode, file_info, ncid)
           if (err .ne. NF_NOERR) call handle_err('nfmpi_open', err)
-           print*, 'xplane process ' , myid  
+           ! print*, 'xplane process ' , myid  
        elseif (yplane .and. (mypy .eq. 0)) then
           err = nfmpi_open(gcomm_y, trim(filename), cmode, file_info, ncid)
           if (err .ne. NF_NOERR) call handle_err('nfmpi_open', err)
-            print*, 'yplane process ' , myid  
+            ! print*, 'yplane process ' , myid  
        else if (zplane .and. (mypz .eq. 0)) then
           err = nfmpi_open(gcomm_z, trim(filename), cmode, file_info, ncid)
           if (err .ne. NF_NOERR) call handle_err('nfmpi_open', err)
-            print*, 'zplane process ' , myid  
+            ! print*, 'zplane process ' , myid  
       endif
 #else 
           err = nfmpi_open(gcomm, trim(filename), cmode, file_info, ncid)
@@ -391,7 +391,7 @@
 		  if (mypx .eq. 0) then !pm: added
 #elif OPT_2
       if ( IN_PLANE(xplane,mypx,yplane,mypy,zplane,mypz)) then
-          print*, 'A leader for the smallest plane ', myid
+          ! print*, 'A leader for the smallest plane ', myid
 #endif 
           ! Get timing metadata global attributes
           ! ---------------------------------

@@ -46,11 +46,11 @@
          ppn = 16
          mycore = mod (myid, ppn)
          nodenum = myid/ppn
-               print *, '0 ', nx_g, ny_g,nz_g, ppn, myid, nodenum,mycore
+              ! print *, '0 ', nx_g, ny_g,nz_g, ppn, myid, nodenum,mycore
               call MPI_Comm_split (MPI_COMM_WORLD, mypx, myid, gcomm_x, err)
               call MPI_Comm_split (MPI_COMM_WORLD, mypy, myid, gcomm_y, err)
               call MPI_Comm_split (MPI_COMM_WORLD, mypz, myid, gcomm_z, err)
-               print *,'1 ',  nx_g, ny_g,nz_g, ppn, myid, nodenum,mycore
+           !    print *,'1 ',  nx_g, ny_g,nz_g, ppn, myid, nodenum,mycore
               call MPI_Comm_split (gcomm_y, mypz, myid, gcomm_yz, err)
                print *,'2 ',  nx_g, ny_g,nz_g, ppn, myid, nodenum,mycore
          !     call MPI_Comm_split (gcomm_yz, mycore, myid, gcomm_yz_0, err)
