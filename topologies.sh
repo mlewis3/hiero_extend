@@ -17,11 +17,12 @@ for MODE in 1 #0
 do
 for NSP in 11 #100 52  
 do 
-for PROG in noleader fixedplane smallestplane
+for PROG in noleader #fixedplane smallestplane
 do
 #do
 #for DATA in 256x256x128 256x256x256 256x256x512 256x512x512
-for DATA in 512x512x512 512x512x256 512x256x512 256x512x512 256x256x512 256x512x256 512x256x256 256x256x256 128x256x512 128x512x256 256x128x512 512x128x256 512x256x128 
+#for DATA in 512x512x512 512x512x256 512x256x512 256x512x512 256x256x512 256x512x256 512x256x256 256x256x256 128x256x512 128x512x256 256x128x512 512x128x256 512x256x128 
+for DATA in 512x512x512 #512x512x256 512x256x512 256x512x512 256x256x512 256x512x256 512x256x256 256x256x256 128x256x512 128x512x256 256x128x512 512x128x256 512x256x128 
 do
  if [ $DATA = "512x512x512" ]; then 
     global=" 512 512 512 "
@@ -60,6 +61,7 @@ do
       do
          mkdir -p /${PROJECTDIR}/${PROG}/${DATA}/${DECOMP}
          if [ $NODES = "128" ]; then
+           if [ $DATA = "512x512x512" ]; then
            if [ $DECOMP = "16x8x16" ]; then
              decomp="16 8 16"
            elif [ $DECOMP = "8x16x16" ]; then
@@ -69,7 +71,11 @@ do
            else
              continue
            fi
+           else
+             break
+           fi
          elif [ $NODES = "512" ]; then
+           if [ $DATA = "512x512x256" || $DATA = "512x256x512" || $DATA = "256x512x512" ]; then
            if [ $DECOMP = "16x16x32" ]; then
              decomp="16 16 32"
            elif [ $DECOMP = "16x32x16" ]; then
@@ -79,7 +85,12 @@ do
            else
              continue
            fi
+           else
+             break
+           fi
          elif [ $NODES = "1024" ]; then
+           
+           if [ $DATA = "256x256x512" || $DATA = "512x256x256" || $DATA = "256x512x256" ]; then
            if [ $DECOMP = "32x32x16" ]; then
              decomp="32 32 16"
            elif [ $DECOMP = "32x16x32" ]; then
@@ -89,13 +100,21 @@ do
            else 
              continue
            fi
+           else
+             break
+           fi
          elif [ $NODES = "2048" ]; then
+           if [ $DATA = "512x512x512" ]; then
            if [ $DECOMP = "32x32x32" ]; then
              decomp="32 32 32"
            else
              continue
            fi
+           else 
+             break
+           fi
          elif [ $NODES = "4096" ]; then
+           if [ $DATA = "128x256x512" || $DATA = "128x512x256" || $DATA = "256x128x512" || $DATA = "512x128x256" || $DATA = "512x256x128" ]; then
            if [ $DECOMP = "64x32x32" ]; then
              decomp="64 32 32"
            elif [ $DECOMP = "32x64x32" ]; then
@@ -104,6 +123,9 @@ do
              decomp="32 32 64"
            else 
              continue
+           fi
+           else
+             break
            fi
          fi
 
