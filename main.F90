@@ -52,13 +52,13 @@
               call MPI_Comm_split (MPI_COMM_WORLD, mypz, myid, gcomm_z, err)
            !    print *,'1 ',  nx_g, ny_g,nz_g, ppn, myid, nodenum,mycore
               call MPI_Comm_split (gcomm_y, mypz, myid, gcomm_yz, err)
-               print *,'2 ',  nx_g, ny_g,nz_g, ppn, myid, nodenum,mycore
+         !     print *,'2 ',  nx_g, ny_g,nz_g, ppn, myid, nodenum,mycore
          !     call MPI_Comm_split (gcomm_yz, mycore, myid, gcomm_yz_0, err)
               call MPI_Comm_split (gcomm_x, mypz, myid, gcomm_xz, err) 
-               print *, '3 ', nx_g, ny_g,nz_g, ppn, myid, nodenum,mycore
+          !     print *, '3 ', nx_g, ny_g,nz_g, ppn, myid, nodenum,mycore
           !    call MPI_Comm_split (gcomm_xz, mycore, myid, gcomm_xy_0, err)
               call MPI_Comm_split (gcomm_x, mypy, myid, gcomm_xy, err) 
-               print *, '4 ', nx_g, ny_g,nz_g, ppn, myid, nodenum,mycore
+           !     print *, '4 ', nx_g, ny_g,nz_g, ppn, myid, nodenum,mycore
            !   call MPI_Comm_split (gcomm_xy, mycore, myid, gcomm_xy_0, err)
 
 
@@ -105,7 +105,7 @@
               call MPI_Comm_size (gcomm_xz_0, n_core0, err)
 
               if (mypy .eq. 0) then
-                  print*, 'MAIN--- XY Plane ', myid, ' ', mycore, ' of ', nodenum, res1, res2, n_core0
+              !    print*, 'MAIN--- XY Plane ', myid, ' ', mycore, ' of ', nodenum, res1, res2, n_core0
               endif
 
         else
@@ -120,7 +120,7 @@
               call MPI_Comm_size (gcomm_xy_0, n_core0, err)
 
               if (mypz .eq. 0) then
-                  print*, 'MAIN-- Z Plane ', myid, ' ', mycore, ' of ', nodenum, res1, res2, n_core0
+               !   print*, 'MAIN-- Z Plane ', myid, ' ', mycore, ' of ', nodenum, res1, res2, n_core0
               endif
         endif
 
