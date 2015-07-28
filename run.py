@@ -10,7 +10,7 @@ import socket
 #import pylab as plt
 
 nodes = [128, 512]
-modes = ['decomp']
+modes = ['short_decomp']
 baseDir = 'projects/ExaHDF5/mlewis/hiero'
 executables = ['No Leader', 'Fixed Plane', 'Smallest Plane']
 
@@ -57,29 +57,28 @@ basedir = 'projects/visualization/mlewis/hiero'
 #basedir = '/projects/ExaHDF5/mlewis/hiero'
 
 linecount = 0
-for nodeIndex,node in enumerate(nodes):
-  for topelement in topology :
-    make_file = 'F'
-    for iter in range (0, numIter):
-      for pgm in modes:
-        print '\nStarting ' + pgm + ' on ' + str(node) + ' nodes, basedir: ' + basedir 
-        if iter > 0 :
-           make_file = 'T'
-        jobid = runcmd(pgm, node, basedir, make_file, topelement)
-        filename = 'op' + pgm + '_' + topelement + '_' + str(node) + '_' + str(iter) + '_' + socket.gethostname()+ '_' + timestamp
-        print filename + ' ' + jobid
-        cmd = 'mv ' + jobid.strip() + '.output ' + filename + '.output'
-        print cmd
-        Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
-        cmd = 'mv ' + jobid.strip() + '.error ' + filename + '.error'
-        print cmd 
-        Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
-        cmd = 'mv ' + jobid.strip() + '.cobaltlog ' + filename + '.cobaltlog'
-        print cmd
-        Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
-    rncmd = 'rm -rf ' + '/' + basedir + '/smallestplane' + '/' + topelement
-    rncmd = 'rm -rf ' + '/' + basedir + '/fixedplane' + '/' + topelement
-    rncmd = 'rm -rf ' + '/' + basedir + '/noleader' + '/' + topelement
-    print rncmd
-    Popen(rncmd, shell=True, stdout=PIPE).communicate()[0]
+for topelement in topology :
+  make_file = 'F'
+  for iter in range (0, numIter):
+      print '\nStarting ' + 'decomp' + ' on ' + str(topelement) + ' volume topology, basedir: ' + basedir 
+      if iter > 0 :
+         make_file = 'T'
+      jobid = runcmd('decomp', 128, basedir, make_file, topelement)
+      filename = 'op' + 'decomp' + '_' + topelement  + '_' + str(iter) + '_' + socket.gethostname()+ '_' + timestamp
+      print filename + ' ' + jobid
+      cmd = 'mv ' + jobid.strip() + '.output ' + filename + '.output'
+      print cmd
+      Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
+      cmd = 'mv ' + jobid.strip() + '.error ' + filename + '.error'
+      print cmd 
+      Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
+      cmd = 'mv ' + jobid.strip() + '.cobaltlog ' + filename + '.cobaltlog'
+      print cmd
+      Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
+      rncmd = 'rm -rf ' + '/' + basedir + '/smallestplane' + '/' + topelement
+      Popen(rncmd, shell=True, stdout=PIPE).communicate()[0]
+      rncmd = 'rm -rf ' + '/' + basedir + '/fixedplane' + '/' + topelement
+      Popen(rncmd, shell=True, stdout=PIPE).communicate()[0]
+      rncmd = 'rm -rf ' + '/' + basedir + '/noleader' + '/' + topelement
+      Popen(rncmd, shell=True, stdout=PIPE).communicate()[0]
   

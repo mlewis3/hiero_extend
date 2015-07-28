@@ -273,7 +273,8 @@
               write(6, 2006, advance = "no") ' ',io_bandwidth
               write(6, 2002, advance ="no") ' ',npx
               write(6, 2002, advance ="no") ' ',npy
-              write(6, 2002) ' ',npz
+              write(6, 2002, advance ="no") ' ',npz
+              write(6, 2005) ' ',npx,npy,npz
           endif
 
           if (info_used .NE. MPI_INFO_NULL) &

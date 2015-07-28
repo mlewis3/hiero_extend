@@ -7,9 +7,8 @@
 #Free bootable blocks
 boot-block --reboot
  
-NODES=$1
 
-
+NODES='128'
 PROJECTDIR=$2
 MAKEFILE=$3
 DATA=$4
@@ -59,43 +58,41 @@ do
  for ppn in 16
  do
    
-      RANKS=`echo "$NODES*$ppn"|bc`
       #16x8x16 8x16x16 16x16x8 16x16x32 16x32x16 32x16x16 32x32x16 32x16x32 16x32x32 32x32x32 64x32x32 32x64x32 32x32x64
       for DECOMP in 16x8x16 8x16x16 16x16x8 16x16x32 16x32x16 32x16x16 32x32x16 32x16x32 16x32x32 32x32x32 64x32x32 32x64x32 32x32x64
       do
          mkdir -p /${PROJECTDIR}/${PROG}/${DATA}/${DECOMP}
            if [ $DECOMP == "16x8x16" ]; then
-             NODES=128
+             NODES='128'
              decomp="16 8 16"
            elif [ $DECOMP = "8x16x16" ]; then
-             NODES=128
+             NODES='128'
              decomp="8 16 16"
            elif [ $DECOMP == "16x16x8" ]; then
-             NODES=128
+             NODES='128'
              decomp="16 16 8"
-
            elif [ $DECOMP == "32x16x16" ]; then
-             NODES=512
+             NODES='512'
              decomp="32 16 16"
            elif [ $DECOMP == "16x32x16" ]; then
-             NODES=512
+             NODES='512'
              decomp="16 32 16"
            elif [ $DECOMP == "16x16x32" ]; then
-             NODES=512
+             NODES='512'
              decomp="16 16 32"
-
            elif [ $DECOMP = "32x32x16" ]; then
-             NODES=1024
+             NODES='1024'
              decomp="32 32 16"
            elif [ $DECOMP = "32x16x32" ]; then
-             NODES=1024
+             NODES='1024'
              decomp="32 16 32"
            elif [ $DECOMP = "16x32x32" ]; then
-             NODES=1024
+             NODES='1024'
              decomp="16 32 32"
            fi           
 
 
+         RANKS=`echo "$NODES*$ppn"|bc`
          ENVS="PAMID_VERBOSE=1"
          OUTPUT=${PROG}_N${NODES}_R${ppn}_${MODE}_${NSP}_${DATA}
 	 echo 

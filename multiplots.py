@@ -24,6 +24,7 @@ searchstringlist = [ 'grep_no_leader' , 'grep_fixed_plane' , 'grep_smallest_plan
 volumelist = [ '512x512x512', '512x512x256', '512x256x512', '256x512x512', '256x256x512', '256x512x256', '512x256x256', '256x256x256', '128x256x512', '128x512x256', '256x128x512', '512x128x256', '512x256x128' ] 
 exectype = [ 'noleader', 'fixedplane', 'smallestplane' ]
 toplist = []
+decomplist = [ 
 # arraylist = [ [ [ [ ] for l in range(fields) ] for k in range(topologies) ] for j in range(executes) ] for i in range(iterations) ]
 arraylist = [ [ [ [ [ ] for l in range(fields) ] for k in range(topologies) ] for j in range(volumes) ] for i in range(executes) ]
 noleader_values = [ [] for i in range(volumes) ]
@@ -52,15 +53,12 @@ for exec_index in range(executes) :
             arraylist[exec_index][vol_index][top_index][1].append(int(words[18]))
             arraylist[exec_index][vol_index][top_index][2].append(int(words[19]))
             arraylist[exec_index][vol_index][top_index][3].append(int(words[20]))
-            #nx_g, ny_g, nz_g
-            arraylist[exec_index][vol_index][top_index][4].append(int(words[2]))
-            arraylist[exec_index][vol_index][top_index][5].append(int(words[3]))
-            arraylist[exec_index][vol_index][top_index][6].append(int(words[4]))
-          if iter == 1 and exec_index == 0 :
-            # print filename + '_ ' + float(words[6])
+          if iter == 1 and exec_index == 0 and vol_index == 0 :
+            # Every volume has the same topology
             toplist.append(top_index)
 
 
+# Retrieving the mean for each volumextopology
 for vol_index,volume in enumerate(volumelist) :
   for topvalues in toplist :
     noleader_values[vol_index].append(np.mean(arraylist[0][vol_index][topvalues][0]))
@@ -79,7 +77,8 @@ for vol_index,volume in enumerate(volumelist) :
   for topvalues in toplist :
     topologyString = str(base[0]) + 'x' + str(base[1]) + 'x' + str(base[2])
     if ( topologyString == decomlist[topvalues]) :
+      nodesize = (base[0] * base[1] * base[2] ) / 16
+      row = str(nodesize)  + ',' + noleader_values[vol_index][topvalues] + ',' + fixedplane_values[vol_index][topvalues] + ',' + smallestplane_values[vol_index][topvalues] + '\n'
       base = list(map(lambda x: (x*2), base))
-      row = str(nodesize)  + ',' + noleader_values[vol_index][0] + ',' + fixedplane_values[vol_index][0] + ',' + smallestplane_values[vol_index][0] + '\n'
       input.write(row)
 
