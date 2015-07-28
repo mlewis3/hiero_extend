@@ -9,19 +9,17 @@ import socket
 #import numpy as np
 #import pylab as plt
 
-nodes = [512]
-modes = ['newtop']
+nodes = [128, 512]
+modes = ['decomp']
 baseDir = 'projects/ExaHDF5/mlewis/hiero'
-plotfile = 'plotit'
-searchstring = 'Time for read'
 executables = ['No Leader', 'Fixed Plane', 'Smallest Plane']
 
 
-def runcmd (pgm, node, dir, make_file):
+def runcmd (pgm, node, dir, make_file, topelement):
         
-	script = './' + pgm + '.sh ' + str(node)  + ' ' + str(dir) + ' ' + make_file
+	script = './' + pgm + '.sh ' + str(node)  + ' ' + str(dir) + ' ' + make_file + ' ' + topelement
         
-        cmd = 'qsub -A ' + project + ' -t 02:30:00 -n '+str(node)+' --mode script '+script
+        cmd = 'qsub -A ' + project + ' -t 01:00:00 -n '+str(node) +' --mode script ' + script
         print 'Executing ' + cmd
 	jobid = Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
 	print 'Jobid : ' + jobid
@@ -39,53 +37,49 @@ def runcmd (pgm, node, dir, make_file):
 ts = time.time()
 timestamp = datetime.datetime.fromtimestamp(ts).strftime('%m-%d-%H-%M')
 #timestamp = datetime.datetime.fromtimestamp(ts).strftime('-%Y-%m-%d')
-configuration = [ 'No Leader' , 'Fixed Plane' , 'Smallest Plane' ]
 searchstringlist = [ 'grep_no_leader' , 'grep_fixed_plane' , 'grep_smallest_plane ' ]
-filenamelist = [ 'nl_search_' + socket.gethostname() + timestamp, 'fp_search_' + socket.gethostname() + '_' + timestamp, 'sp_search_' + socket.gethostname() + '_' + timestamp ]
+#topology = [ '512x512x512', '512x512x256', '512x256x512', '256x512x512', '256x256x512', '256x512x256', '512x256x256', '256x256x256', '128x256x512', '128x512x256', '256x128x512', '512x128x256', '512x256x128' ]
+topology = [ '256x256x256', '512x512x256' ]
 headerbanner = 'volume size (MB) \tnx_g\tny_g\tnz_g\tnpx\tnpy\tnpz\tread time\twrite time\tread (open)\tread (close)\topen time\tclose time\tread bw\tppn\tnode size\ttime-date'
 
 
-fields = 17
-topologies = 30
-noleaderarray = [ [ [0.0] for j in range(fields) ] for i in range(topologies) ]
-fixedplanearray = [ [ [0.0] for j in range(fields) ] for i in range(topologies) ]
-smallestplanearray = [ [ [0.0] for j in range(fields) ] for i in range(topologies) ]
 
 
-numIter = 11
-outstreamlist = []
-linelist = []
-arraylist = []
-arraylist.append(noleaderarray)
-arraylist.append(fixedplanearray)
-arraylist.append(smallestplanearray)
-outputlist = []
+numIter = 2
 ts = time.time()
 make_file = 'F'
 
 
-#project = 'visualization'
-#basedir = '/projects/visualization/mlewis/hiero'
+project = 'visualization'
+basedir = 'projects/visualization/mlewis/hiero'
 
-project = 'ExaHDF5'
-basedir = '/projects/ExaHDF5/mlewis/hiero'
+#project = 'ExaHDF5'
+#basedir = '/projects/ExaHDF5/mlewis/hiero'
 
 linecount = 0
 for nodeIndex,node in enumerate(nodes):
-  for iter in range (0, numIter):
-    for pgm in modes:
-      print '\nStarting ' + pgm + ' on ' + str(node) + ' nodes, basedir: ' + basedir 
-      if iter > 0 :
-         make_file = 'T'
-      jobid = runcmd(pgm, node, basedir, make_file)
-      filename = 'op' + pgm + '_' +str(node)+'_'+str(iter) + '_' + socket.gethostname()+ '_' + timestamp
-      print filename + ' ' + jobid
-      cmd = 'mv ' + jobid.strip() + '.output ' + filename + '.output'
-      print cmd
-      Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
-      cmd = 'mv ' + jobid.strip() + '.error ' + filename + '.error'
-      print cmd
-      Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
-      cmd = 'mv ' + jobid.strip() + '.cobaltlog ' + filename + '.cobaltlog'
-      print cmd
-      Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
+  for topelement in topology :
+    make_file = 'F'
+    for iter in range (0, numIter):
+      for pgm in modes:
+        print '\nStarting ' + pgm + ' on ' + str(node) + ' nodes, basedir: ' + basedir 
+        if iter > 0 :
+           make_file = 'T'
+        jobid = runcmd(pgm, node, basedir, make_file, topelement)
+        filename = 'op' + pgm + '_' + topelement + '_' + str(node) + '_' + str(iter) + '_' + socket.gethostname()+ '_' + timestamp
+        print filename + ' ' + jobid
+        cmd = 'mv ' + jobid.strip() + '.output ' + filename + '.output'
+        print cmd
+        Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
+        cmd = 'mv ' + jobid.strip() + '.error ' + filename + '.error'
+        print cmd 
+        Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
+        cmd = 'mv ' + jobid.strip() + '.cobaltlog ' + filename + '.cobaltlog'
+        print cmd
+        Popen(cmd, shell=True, stdout=PIPE).communicate()[0]
+    rncmd = 'rm -rf ' + '/' + basedir + '/smallestplane' + '/' + topelement
+    rncmd = 'rm -rf ' + '/' + basedir + '/fixedplane' + '/' + topelement
+    rncmd = 'rm -rf ' + '/' + basedir + '/noleader' + '/' + topelement
+    print rncmd
+    Popen(rncmd, shell=True, stdout=PIPE).communicate()[0]
+  
