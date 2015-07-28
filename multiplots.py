@@ -24,7 +24,7 @@ searchstringlist = [ 'grep_no_leader' , 'grep_fixed_plane' , 'grep_smallest_plan
 volumelist = [ '512x512x512', '512x512x256', '512x256x512', '256x512x512', '256x256x512', '256x512x256', '512x256x256', '256x256x256', '128x256x512', '128x512x256', '256x128x512', '512x128x256', '512x256x128' ] 
 exectype = [ 'noleader', 'fixedplane', 'smallestplane' ]
 toplist = []
-decomplist = [ 
+decomplist = [ '16x8x16', '8x16x16', '16x16x8', '16x16x32', '16x32x16', '32x16x16', '32x32x16', '32x16x32', '16x32x32', '32x32x32', '64x32x32', '32x64x32', '32x32x64' ]
 # arraylist = [ [ [ [ ] for l in range(fields) ] for k in range(topologies) ] for j in range(executes) ] for i in range(iterations) ]
 arraylist = [ [ [ [ [ ] for l in range(fields) ] for k in range(topologies) ] for j in range(volumes) ] for i in range(executes) ]
 noleader_values = [ [] for i in range(volumes) ]
@@ -65,7 +65,7 @@ for vol_index,volume in enumerate(volumelist) :
     fixedplane_values[vol_index].append(np.mean(arraylist[1][vol_index][topvalues][0]))
     smallestplane_values[vol_index].append(np.mean(arraylist[2][vol_index][topvalues][0]))
 
-# Strong value graph
+# Strong value graph  -- same volume, increasing core size
 for vol_index,volume in enumerate(volumelist) :
   filename = host_name + 'strong_'  + volume + '_' + timestamps[0] + '.csv'
   input = open(filename,'w')
@@ -81,4 +81,12 @@ for vol_index,volume in enumerate(volumelist) :
       row = str(nodesize)  + ',' + noleader_values[vol_index][topvalues] + ',' + fixedplane_values[vol_index][topvalues] + ',' + smallestplane_values[vol_index][topvalues] + '\n'
       base = list(map(lambda x: (x*2), base))
       input.write(row)
+
+
+#Weak value graph , -- increasing volume  same core size
+for topvalues in toplist :
+  filename = host_name + 'weak_'  + decomposition[topvalues] + '_' + timestamps[0] + '.csv'
+
+  
+
 
