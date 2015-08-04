@@ -324,7 +324,7 @@
       subroutine pnetcdf_read(filename)
           use topology_m,  only : gcomm, npes, mypx, mypy, mypz, myid
 #if defined(OPT) || defined(OPT_2)
-				  use topology_m,  only : gcomm_x, gcomm_yz, gcomm_yz_0, gcomm_node, mycore
+	  use topology_m,  only : gcomm_x, gcomm_yz, gcomm_yz_0, gcomm_node, mycore
           use topology_m,  only : gcomm_xy, gcomm_xz
           use topology_m,  only : gcomm_y, gcomm_z, gcomm_xz_0, gcomm_xy_0
           use variables_m, only : temp_g, pressure_g, yspecies_g, u_g
@@ -338,6 +338,8 @@
           use variables_m, only : temp, pressure, yspecies, u
           use runtime_m,   only : method, time, tstep, time_save
 
+          !include mpif.h
+
           implicit none
 
           ! declarations passed in
@@ -349,6 +351,10 @@
           integer(MPI_OFFSET_KIND) g_sizes(4), subsizes(4), starts(4),get_size
           double precision time_start, time_end, d_time(1)
 
+          integer :: io_distance
+          integer :: node_distance
+          integer :: link_id
+
           ! open file and pass in the MPI hint
           time_start = MPI_Wtime()
 
@@ -358,20 +364,37 @@
           ! print*, 'in read ' , myid  
 
 #ifdef OPT
-		  if (mypx .eq. 0) then !pm: added
+          if (mypx .eq. 0) then !pm: added
           err = nfmpi_open(gcomm_x, trim(filename), cmode, file_info, ncid)
           if (err .ne. NF_NOERR) call handle_err('nfmpi_open', err)
       endif
 #elif OPT_2
+2010      FORMAT(A ,i7,'IO distance ',i7,'node distance ',i7, ' link id ', i7)
        if (xplane .and. (mypx .eq. 0) ) then
+          ! Determine the hop size
+          call MPIX_IO_DISTANCE(io_distance)
+          call MPIX_IO_node_id(node_distance)
+          call MPIX_IO_link_id(link_id)
+          write(6,2010, advance = "no") 'HOP_STATUS: RANK ',myid, io_distance, node_distance, link_id 
+          print*, 'Rank,  IO distance, node distance, link_id  ', io_distance, node_distance, link_id
+           
+
           err = nfmpi_open(gcomm_x, trim(filename), cmode, file_info, ncid)
           if (err .ne. NF_NOERR) call handle_err('nfmpi_open', err)
            ! print*, 'xplane process ' , myid  
        elseif (yplane .and. (mypy .eq. 0)) then
+          call MPIX_IO_DISTANCE(io_distance)
+          call MPIX_IO_node_id(node_distance)
+          call MPIX_IO_link_id(link_id)
+          write(6,2010, advance = "no") myid, io_distance, node_distance, link_id 
           err = nfmpi_open(gcomm_y, trim(filename), cmode, file_info, ncid)
           if (err .ne. NF_NOERR) call handle_err('nfmpi_open', err)
             ! print*, 'yplane process ' , myid  
        else if (zplane .and. (mypz .eq. 0)) then
+          call MPIX_IO_DISTANCE(io_distance)
+          call MPIX_IO_node_id(node_distance)
+          call MPIX_IO_link_id(link_id)
+          write(6,2010, advance = "no") myid, io_distance, node_distance, link_id 
           err = nfmpi_open(gcomm_z, trim(filename), cmode, file_info, ncid)
           if (err .ne. NF_NOERR) call handle_err('nfmpi_open', err)
             ! print*, 'zplane process ' , myid  

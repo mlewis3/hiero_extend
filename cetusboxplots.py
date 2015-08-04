@@ -77,9 +77,15 @@ for vol_index,volume in enumerate(volumelist) :
       datatext = '../cetus_data/' + volume + '_' + topvalue + '_' + exectype[execute_index] + '.txt'
       output = open(datatext,'w')
       output.write(str(arraylist[execute_index][vol_index][top_index]))
+#      print arraylist[execute_index][vol_index][top_index] 
       exec_mean[execute_index][vol_index][top_index] = np.mean(arraylist[execute_index][vol_index][top_index])
-      center = ones(5) * exec_mean[execute_index][vol_index][top_index]
-      data = concatenate((arraylist[execute_index][vol_index][top_index],center),0)
-      boxplot(data)
+#      print exec_mean[execute_index][vol_index][top_index]
+#      center = ones(5) * exec_mean[execute_index][vol_index][top_index]
+ #     data = concatenate((arraylist[execute_index][vol_index][top_index],center),0)
+      bp_dict = boxplot(arraylist[execute_index][vol_index][top_index],vert=False )
+      for line in bp_dict['medians'] :
+        x,y = line.get_xydata()[1]
+        text(x, y, '%.1f' %x, horizontalalignment='center')
+        
       savefig(imagename)      
 
